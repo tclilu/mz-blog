@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="__PLUGINS__/layui/css/layui.css">
+    <script src="__PLUGINS__/layui/layui.js"></script>
+</head>
+<body style="padding: 20px;">
+    <form class="layui-form" id="form-role">
+        <input type="hidden" name="rid" value="{$role.rid}" />
+        <div class="layui-form-item">
+            <label class="layui-form-label">角色名称</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" name="role_name" value="{$role.name}" placeholder="请输入角色名称" autocomplete="off" />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">权限列表</label>
+            <div class="layui-input-inline">
+                {volist name="menus" id="menu"}
+                <input type="checkbox" name="menus[{$menu.mid}]" title="{$menu.menu_name}" lay-skin="primary" value="1" {$menu.status==0?'disabled':''} {:isset($role.permissions) && $role.permissions && in_array($menu.mid,$role.permissions)?'checked':''} />
+                <hr />
+                {volist name="menu.submenu" id="submenu"}
+                <input type="checkbox" name="menus[{$submenu.mid}]" title="{$submenu.menu_name}" lay-skin="primary" value="1" {$submenu.status==0?'disabled':''} {:isset($role.permissions) && $role.permissions && in_array($submenu.mid,$role.permissions)?'checked':''} />
+                {/volist}
+                {/volist}
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">状态</label>
+            <div class="layui-input-inline">
+                <input type="checkbox" name="status" lay-skin="switch" lay-text="ON|OFF" lay-filter="statusTips" value="1" {$role.status=='正常'?'checked':''} />
+            </div>
+        </div>
+    </form>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-sm layui-btn-normal" onclick="save();">保存</button>
+        </div>
+    </div>
+<script>
+    layui.use(['form'],function () {
+        var form = layui.form;
+        $ = layui.jquery;
+        // 监听状态开关
+        form.on('switch(statusTips)',function (data) {
+            layer.tips(this.checked?'状态：正常':'状态：禁用',data.othis);
+        })
+    });
+
+    /**
+     * 保存角色信息
+     */
+    function save() {
+        if ($('input[name="role_name"]').val() == ''){
+            layer.alert('请填写角色名称',{icon: 2});
+            return;
+        }
+        $.post('/role_save',$('#form-role').serialize(),function (response) {
+            if (response['code'] == 2002){
+                layer.msg(response.msg,{icon: 1});
+                setTimeout(function () {
+                    parent.location.reload();
+                },1000);
+            } else{
+                layer.msg(response.msg,{icon: 2});
+            }
+        },'json');
+    }
+</script>
+</body>
+</html>

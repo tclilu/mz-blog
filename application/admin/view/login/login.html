@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后台登录系统</title>
+    <!--必要样式-->
+    <link rel="stylesheet" href="__ADMINSTATIC__/css/login.css">
+    <!--引入layui-->
+    <link rel="stylesheet" href="__PLUGINS__/layui/css/layui.css">
+    <script src="__PLUGINS__/layui/layui.js"></script>
+    <!--引入font图标CDN-->
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body>
+    <script src="__PLUGINS__/canvas-nest/canvas-nest.min.js"></script>
+    <div class='login'>
+        <div class='title'>
+            <span>管理员登录</span>
+        </div>
+        <form class='admin-info'>
+            <div class='mz-admin'>
+                <div class='icon'>
+                    <i class="fa fa-user-o fa-lg" aria-hidden="true"></i>
+                </div>
+                <input name="username" placeholder='用户名' maxlength="16" type='text' autocomplete="off" />
+                <div class='validation'>
+                    <i class="fa fa-check" aria-hidden="true"></i>
+                </div>
+            </div>
+            <div class='mz-admin'>
+                <div class='icon'>
+                    <i class="fa fa-lock fa-lg" aria-hidden="true"></i>
+                </div>
+                <input name="password" placeholder='密码' maxlength="16" type='password' autocomplete="new-password" />
+                <div class='validation'>
+                    <i class="fa fa-check" aria-hidden="true"></i>
+                </div>
+            </div>
+            <div class='mz-admin'>
+                <div class='icon'>
+                    <i class="fa fa-key fa-lg" aria-hidden="true"></i>
+                </div>
+                <input name="verify_code" placeholder='验证码' maxlength="4" type='text' autocomplete="off" />
+                <div class='verify_img'>
+                    <img src="{:captcha_src()}" alt="验证码" onclick="changeImg();">
+                </div>
+            </div>
+            <div class='mz-btn-login'>
+                <input type='button' value='登&nbsp;录' onclick="doLogin();">
+            </div>
+        </form>
+        <div class='welcome'>
+            <p>欢迎使用 前台地址：<a href="/" target="_blank">木子</a></p>
+        </div>
+    </div>
+    <div class='authent'>
+        <div class="loader" style="height: 44px;width: 44px;margin-left: 45px;">
+            <div class="ball-clip-rotate-pulse">
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+        <p>验证中...</p>
+    </div>
+    <script>
+        layui.use(['layer'], function () {
+            var layer = layui.layer;
+            $ = layui.jquery;
+            // 设置随机背景图片
+            $('body').css('background-image',"url(__STATIC__/images/{$src})");
+            // 用户名输入框获得焦点
+            $('input[name="username"]').focus();
+            // 键盘按下回车键进行登录
+            $('input').keydown(function (e) {
+                if (e.keyCode == 13){
+                    doLogin();
+                }
+            });
+        });
+
+        /**
+         * 登录按钮点击事件
+         */
+        function doLogin() {
+            // 获取元素的jq对象
+            var username = $.trim($('input[name="username"]').val());
+            var password = $.trim($('input[name="password"]').val());
+            var verify_code = $.trim($('input[name="verify_code"]').val());
+            //非空验证
+            if (username == ''){
+                errorAlert('请填写用户名');
+                return;
+            }
+            if (password == ''){
+                errorAlert('请填写密码');
+                return;
+            }
+            if (verify_code == ''){
+                errorAlert('请输入验证码');
+                return;
+            }
+            $('.login').addClass('tilt'); // 倾斜特效
+            $('.authent').fadeIn().animate({right: 0,opacity: 1}).addClass('visible');
+            $.post('/doLogin',$('form').serialize(),function (response) {
+                setTimeout(function () {
+                    $('.authent').hide();
+                    $('.login').removeClass('tilt');
+                    if (response['code'] == 2001) {
+                        // 登录成功
+                        layer.msg(response.msg,{time: 1000});
+                        setTimeout(function () {
+                            window.location.href='/tclilu';
+                        },500);
+                    } else {
+                        // 登录失败,更换验证码图片,提示信息
+                        changeImg();
+                        errorAlert(response.msg);
+                    }
+                },1500);
+            },'json');
+        }
+
+        /**
+         * 错误提示,封装layer弹窗组件
+         * @param msg
+         */
+        function errorAlert(msg) {
+            var content = layer.alert(msg, { icon: 5, time: 2000, offset: 't', closeBtn: 0, title: '错误信息', btn: [], anim: 6, shade: 0 });
+            layer.style(content, {
+                color: '#777777',
+            });
+        }
+
+        /**
+         * 点击图片更换验证码
+         */
+        function changeImg() {
+            $('.verify_img img').attr('src','{:captcha_src()}');
+        }
+    </script>
+</body>
+</html>

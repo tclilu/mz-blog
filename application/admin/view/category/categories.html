@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>分类管理</title>
+    {include file='/common/linkstyle' /}
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+    {include file='/common/header' /}
+    <!-- Left side column. contains the logo and sidebar -->
+    {include file='/common/aside' /}
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (页眉) -->
+        <section class="content-header">
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
+                <li class="active">分类管理</li>
+            </ol>
+        </section>
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">添加分类</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <!-- form start -->
+                        <form class="form-horizontal layui-form" id="form-category">
+                            <input type="hidden" class="cid" name="cid" value="" />
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label for="name" class="col-md-2 control-label">分类名称</label>
+                                    <div class="col-md-10">
+                                        <input type="text" class="form-control" name="name" value="" id="name" placeholder="请输入分类名称" autocomplete="off">
+                                        <p class="help-block">长度不超过16个字符。</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="photo" class="col-md-2 control-label">默认图片</label>
+                                    <div class="col-md-10">
+                                        <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" id="photo" style="vertical-align: top;"><i class="layui-icon">&#xe67c;</i>选择图片</button>
+                                        <img src="" id="preview" style="width: 100px;height: 100px;border: 1px solid #cccccc;vertical-align: top;" alt=""/>
+                                        <input type="hidden" name="photo" value="" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="status" class="col-md-2 control-label">状态</label>
+                                    <div class="col-md-10">
+                                        <input type="checkbox" class="layui-form" name="status" id="status" lay-skin="switch" lay-text="ON|OFF" lay-filter="statusTips" value="1">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.box-body -->
+                        </form>
+                        <div class="box-footer">
+                            <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="save();">保存</button>
+                        </div>
+                        <!-- /.box-footer -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- /.col -->
+
+                <div class="col-md-6">
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">分类列表</h3>
+                            <div class="box-tools">
+                                <div class="input-group input-group-sm" style="width: 150px;">
+                                    <input type="text" name="table_search" class="form-control pull-right" placeholder="搜索">
+                                    <div class="input-group-btn">
+                                        <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body table-responsive">
+                            <table class="table table-bordered table-striped" style="text-align: center;">
+                                <tr>
+                                    <th style="width: 50px;">编号</th>
+                                    <th>分类名称</th>
+                                    <th style="width: 120px;">默认图片</th>
+                                    <th>状态</th>
+                                    <th style="width: 100px;">操作</th>
+                                </tr>
+                                {volist name="categories" id="category" empty="$empty"}
+                                <tr>
+                                    <td style="text-align:center;vertical-align: middle;">{$category.cid}</td>
+                                    <td class="name" style="text-align:center;vertical-align: middle;">{$category.name}</td>
+                                    <td class="photo">{empty name="$category.photo"}暂无图片{else /}<img src="/public/uploads/category_photo/{$category.photo}" style="width: 100px;height: 50px;border: 1px solid #cccccc;" alt="{$category.photo}" />{/empty}</td>
+                                    <td class="status" style="text-align:center;vertical-align: middle;">{$category.status==1?'正常':'<jy style="color: #ff0000;">禁用</jy>'}</td>
+                                    <td style="text-align:center;vertical-align: middle;">
+                                        <button class="layui-btn layui-bg-purple layui-btn-xs" onclick="category_up(this,{$category.cid});">编辑</button>
+                                        <button class="layui-btn layui-bg-red layui-btn-xs" onclick="category_disable({$category.cid});">禁用</button>
+                                    </td>
+                                </tr>
+                                {/volist}
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="box-footer clearfix">
+                            <ul class="pagination pagination-sm no-margin pull-right">
+                                <li><a href="#">&laquo;</a></li>
+                                <li><a href="#">1</a></li>
+                                <li><a href="#">2</a></li>
+                                <li><a href="#">3</a></li>
+                                <li><a href="#">&raquo;</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <!-- Main Footer -->
+    {include file='/common/footer' /}
+    <!-- Control Sidebar -->
+    {include file='/common/controlSideBar' /}
+    <!-- 添加侧边栏的背景。 这个 div必须放在 control-sidebar 之后 -->
+    <div class="control-sidebar-bg"></div>
+</div>
+<!-- ./wrapper -->
+<!-- REQUIRED JS SCRIPTS -->
+{include file='/common/script' /}
+<script>
+    layui.use(['form','upload'],function () {
+        form = layui.form;
+        $ = layui.jquery;
+        upload = layui.upload;
+        // 监听状态开关
+        form.on('switch(statusTips)',function (data) {
+            layer.tips(this.checked?'状态：正常':'状态：禁用',data.othis);
+        });
+        var loadIndex = null;
+        // 上传图片事件
+        upload.render({
+            elem: '#photo',
+            url: '/public/upload/category_photo',
+            accept: 'images', //指定允许上传时校验的文件类型
+            acceptMime : 'image/*', //打开文件选择框时，只显示图片文件
+            exts: 'jpg|jpeg|png|gif', // 文件后缀
+            field: 'upload_img',
+            size: 3072, // 限制上传图片大小最大为3M
+            auto: true, // 选择图片后自动上传
+            choose: function (obj) { // 文件被选择后触发
+                //将每次选择的文件追加到文件队列
+                var files = obj.pushFile();
+                //预读本地文件，如果是多文件，则会遍历。(不支持ie8/9)
+                obj.preview(function(index, file, result) {
+                    // 第一个参数：得到文件索引
+                    // 第二个参数：得到文件对象
+                    // 第三个参数：得到文件base64编码，比如图片
+                    // 预览图片
+                    $('#preview').attr('src',result);
+                });
+            },
+            before: function (obj) { // choose 之后的回调
+                loadIndex = layer.load(2, {
+                    shade: [0.5,'#ccc'] //0.1透明度的白色背景
+                });
+            },
+            done: function (response,index,reUpload) { // 接口响应200的回调
+                // 第一个参数：服务器端响应信息
+                // 第二个参数：当前文件的索引
+                // 第三个参数：重新上传的方法
+                layer.close(loadIndex);
+                var url = response.msg;
+                $('input[name="photo"]').val(url);
+            },
+            error: function (index,reUpload) { // 接口响应异常的回调
+                // 第一个参数：当前文件的索引
+                // 第二个参数：重新上传的方法
+            }
+        });
+    });
+
+    /**
+     * 保存分类
+     */
+    function save() {
+        if ($('input[name="name"]').val() == ''){
+            layer.alert('请输入分类名称',{icon: 2});
+            return;
+        }
+        layer.confirm('确定要保存当前分类信息吗？',{btn: ['确定','取消'],icon: 3},function () {
+            $.post('/category_save',$("#form-category").serialize(),function (response) {
+                if (response['code'] == 2002) {
+                    layer.msg(response.msg,{icon: 1});
+                    setTimeout(function () {
+                        window.location.reload();
+                    },1000);
+                } else {
+                    layer.msg(response.msg,{icon: 2});
+                }
+            },'json');
+        },function () {
+            layer.msg('操作取消', {
+                time: 1000, //1s后自动关闭
+            });
+        });
+    }
+
+    /**
+     * 显示当前分类信息
+     * @param obj 当前编辑按钮对象
+     * @param cid 当前分类cid
+     */
+    function category_up(obj,cid) {
+        var loadIndex = layer.load(2, {shade: [0.5,'#ccc']});
+        // console.log(cid);
+        // console.log($(obj).parent('td').siblings('.name').html());
+        // console.log($(obj).parent('td').siblings('.status').html());
+        $('input[name="cid"]').val(cid);
+        if ($(obj).parent('td').siblings('.photo').html() != '暂无图片'){
+            $('#preview').attr('src',$(obj).parent('td').siblings('.photo').children('img').attr('src'));
+        } else {
+            $('#preview').attr('src','');
+        }
+        $('input[name="name"]').val($(obj).parent('td').siblings('.name').html());
+        if ($(obj).parent('td').siblings('.status').html() == '正常') {
+            $('input[name="status"]').prop('checked',true);
+            form.render('checkbox');
+        } else {
+            $('input[name="status"]').prop('checked',false);
+            form.render('checkbox');
+        }
+        layer.close(loadIndex);
+    }
+
+    /**
+     * 禁用分类
+     * @param cid 当前分类cid
+     */
+    function category_disable(cid) {
+        //询问框
+        layer.confirm('您确定要禁用该分类吗？', {
+            btn: ['确定','取消'], //按钮
+            icon: 3,
+        }, function(){
+            $.post('/category_disable',{cid:cid},function (response) {
+                if (response['code'] == 2003) {
+                    layer.msg(response.msg);
+                    setTimeout(function () {
+                        // 1秒后重新加载页面
+                        window.location.reload();
+                    },1000);
+                } else {
+                    layer.alert(response.msg,{icon: 2});
+                }
+            },'json');
+        }, function(){
+            layer.msg('操作取消', {
+                time: 1000, //1s后自动关闭
+            });
+        });
+    }
+</script>
+</body>
+</html>

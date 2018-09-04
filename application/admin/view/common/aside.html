@@ -1,0 +1,102 @@
+<aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+            <!-- Sidebar user panel (optional) -->
+            <div class="user-panel">
+                <div class="pull-left image">
+                    <img src="{$admin_info.avatar}" class="img-circle" alt="用户图像">
+                </div>
+                <div class="pull-left info">
+                    <p>{$admin_info.true_name}</p>
+                    <!-- Status -->
+                    <a href="#"><i class="fa fa-circle text-success"></i>在线</a>
+                </div>
+            </div>
+            <!-- search form (Optional) -->
+            <form action="#" method="get" class="sidebar-form">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control" placeholder="搜索...">
+                    <span class="input-group-btn">
+                            <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button>
+                        </span>
+                </div>
+            </form>
+            <!-- /.search form -->
+            <!-- Sidebar Menu -->
+            <ul class="sidebar-menu">
+                <!--.text-red {
+                          color: #dd4b39 !important;
+                        }
+                        .text-yellow {
+                          color: #f39c12 !important;
+                        }
+                        .text-aqua {
+                          color: #00c0ef !important;
+                        }
+                        .text-blue {
+                          color: #0073b7 !important;
+                        }
+                        .text-black {
+                          color: #111111 !important;
+                        }
+                        .text-light-blue {
+                          color: #3c8dbc !important;
+                        }
+                        .text-green {
+                          color: #00a65a !important;
+                        }
+                        .text-gray {
+                          color: #d2d6de !important;
+                        }
+                        .text-navy {
+                          color: #001f3f !important;
+                        }
+                        .text-teal {
+                          color: #39cccc !important;
+                        }
+                        .text-olive {
+                          color: #3d9970 !important;
+                        }
+                        .text-lime {
+                          color: #01ff70 !important;
+                        }
+                        .text-orange {
+                          color: #ff851b !important;
+                        }
+                        .text-fuchsia {
+                          color: #f012be !important;
+                        }
+                        .text-purple {
+                          color: #605ca8 !important;
+                        }
+                        .text-maroon {
+                          color: #d81b60 !important;
+                        }-->
+                <!-- Optionally, you can add icons to the links -->
+                {eq name='$menus' value='已禁用'}<script>alert('当前角色已被超级管理员禁用，即将自动退出');setTimeout(function () {window.location.href='/login';},5000);</script>{else/}{eq name='$menus' value='暂无权限'}<li class="header">暂无任何系统权限</li>{else/}<li class="header">主导航</li>
+                {/eq}{/eq}
+                <li class="{if ($_SERVER['REQUEST_URI']=='/tclilu')}active{/if}"><a href="/tclilu"><i class="fa fa-dashboard"></i><span>仪表盘</span></a></li>
+                {volist name='menus' id='vo'}
+                <li class="{if isset($vo.submenu) && (in_array(substr($_SERVER['REQUEST_URI'],1),$subMenusRouteNames[$vo.menu_name]))}treeview active{/if}{if $_SERVER['REQUEST_URI']=='/' . $vo.route_name} active{/if}">
+                    <a href="{if !isset($vo.submenu)}http://{$_SERVER['SERVER_NAME']}/{$vo.route_name}{else /}javascript:;{/if}">
+                        <i class="{$vo.icon_code}" aria-hidden="true"></i><span>{$vo.menu_name}</span>
+                        {if isset($vo.submenu)}
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                        {/if}
+                    </a>
+                    {if isset($vo.submenu)}
+                    <ul class="treeview-menu {if in_array(substr($_SERVER['REQUEST_URI'],1),$subMenusRouteNames[$vo.menu_name])}active{/if}">
+                        {volist name='vo.submenu' id='svo'}
+                        <li class="{if $_SERVER['REQUEST_URI']=='/' . $svo.route_name}active{/if}"><a href="http://{$_SERVER['SERVER_NAME']}/{$svo.route_name}"><i class="{$svo.icon_code}" aria-hidden="true"></i>{$svo.menu_name}</a></li>
+                        {/volist}
+                    </ul>
+                    {/if}
+                </li>
+                {/volist}
+            </ul>
+            <!-- /.sidebar-menu -->
+        </section>
+        <!-- /.sidebar -->
+    </aside>

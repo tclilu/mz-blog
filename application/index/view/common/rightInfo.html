@@ -1,0 +1,148 @@
+<div class="layui-col-md3 layui-hide-xs">
+    <div class="layui-card" style="margin-bottom: 15px;">
+        <div class="layui-tab layui-tab-card">
+            <ul class="layui-tab-title">
+                <li class="layui-this">网站信息</li>
+                <li>网站管理</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-text layui-show">
+                    <ul>
+                        <li>网站名称：木子博客</li>
+                        <li>前端UI：<a href="http://www.layui.com/">Layui 2.3.0</a>、<a href="https://github.com/almasaeed2010/AdminLTE/releases/tag/v2.3.11">AdminLTE 2.3.11</a></li>
+                        <li>后端架构：<a href="http://www.thinkphp.cn/">ThinkPHP 5.0.20</a></li>
+                        <li>GitHub：<a href="https://github.com/tclilu">tclilu</a></li>
+                    </ul>
+                </div>
+                <div class="layui-tab-item">
+                    <p style="text-align: center;">
+                        <a href="/login" class="layui-btn layui-btn-primary layui-btn-sm" target="_blank">管理员登录</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-card">
+        <h3 class="layui-card-header">最新文章</h3>
+        <ul class="layui-card-body new-article">
+            <li>
+                <a href="" title="layui 的 GitHub 及 Gitee (码云) 仓库，欢迎Star">layui 的 GitHub 及 Gitee (码云) 仓库，欢迎Star</a>
+            </li>
+            <li>
+                <a href="">layui 常见问题的处理和实用干货集锦</a>
+            </li>
+            <li>
+                <a href="" title="">layui 的 GitHub 及 Gitee (码云) 仓库，欢迎Star</a>
+            </li>
+            <li>
+                <a href="">layui 常见问题的处理和实用干货集锦</a>
+            </li>
+            <li>
+                <a href="">layui 的 GitHub 及 Gitee (码云) 仓库，欢迎Star</a>
+            </li>
+        </ul>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-header">分类</div>
+        <div class="layui-card-body">
+            {volist name="data.categories" id="category"}
+            <p><a href="">{$category.name}</a></p>
+            {/volist}
+        </div>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-header">标签云</div>
+        <div class="layui-card-body">
+            {volist name="data.tags" id="tag"}
+            <span href="#" class="layui-badge {$data.color[$key]}">{$tag.tname}</span>
+            {/volist}
+        </div>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-header">本周热议</div>
+        <ul class="layui-card-body">
+            <li>
+                <a href="">基于 layui 的极简社区页面模版</a>
+                <span style="float: right;color: #cccccc"><i class="iconfont icon-pinglun1"></i> 16</span>
+                <hr class="layui-bg-gray">
+            </li>
+            <li>
+                <a href="">基于 layui 的极简社区页面模版</a>
+                <span style="float: right;color: #cccccc"><i class="iconfont icon-pinglun1"></i> 16</span>
+                <hr class="layui-bg-gray">
+            </li>
+            <li>
+                <a href="">基于 layui 的极简社区页面模版</a>
+                <span style="float: right;color: #cccccc"><i class="iconfont icon-pinglun1"></i> 16</span>
+                <hr class="layui-bg-gray">
+            </li>
+        </ul>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-header">评论周榜</div>
+        <ul class="layui-card-body rank">
+            <li>
+                <a href="">
+                    <img src="__STATIC__/images/yangmi/1.jpg"/><cite>贤心</cite><i>10次回答</i>
+                </a>
+            </li>
+            <li>
+                <a href="">
+                    <img src="__STATIC__/images/yangmi/2.jpg"/><cite>贤心</cite><i>106次回答</i>
+                </a>
+            </li>
+            <li>
+                <a href="">
+                    <img src="__STATIC__/images/yangmi/2.jpg"><cite>贤心</cite><i>106次回答</i>
+                </a>
+            </li>
+            <li>
+                <a href="">
+                    <img src="__STATIC__/images/yangmi/2.jpg"><cite>贤心</cite><i>106次回答</i>
+                </a>
+            </li>
+            <li>
+                <a href="">
+                    <img src="__STATIC__/images/yangmi/2.jpg"><cite>贤心</cite><i>106次回答</i>
+                </a>
+            </li>
+            <li>
+                <a href="">
+                    <img src="__STATIC__/images/yangmi/2.jpg"><cite>贤心</cite><i>106次回答</i>
+                </a>
+            </li>
+            <li>
+                <a href="">
+                    <img src="__STATIC__/images/yangmi/2.jpg"><cite>贤心</cite><i>106次回答</i>
+                </a>
+            </li>
+            <li>
+                <a href="">
+                    <img src="__STATIC__/images/yangmi/2.jpg"><cite>贤心</cite><i>106次回答</i>
+                </a>
+            </li>
+            <li>
+                <a href="">
+                    <img src="__STATIC__/images/yangmi/2.jpg"><cite>贤心</cite><i>106次回答</i>
+                </a>
+            </li>
+            <li>
+                <a href="">
+                    <img src="__STATIC__/images/yangmi/2.jpg"><cite>贤心</cite><i>106次回答</i>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-header">这里可作为广告区域</div>
+        <div class="layui-card-body advertisement">
+            <a href="" target="_blank" time-limit="2017.09.25-2099.01.01">LayUI - 经典模块化前端框架</a>
+        </div>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-header">友情链接</div>
+        <div class="layui-card-body friend-link">
+            <a href="" class="fly-link">申请友链</a>
+        </div>
+    </div>
+</div>

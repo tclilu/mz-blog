@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="__PLUGINS__/layui/css/layui.css">
+    <script src="__PLUGINS__/layui/layui.js"></script>
+</head>
+<body style="padding: 20px;">
+    <form class="layui-form" id="form-admin">
+        <input type="hidden" name="id" value="{$data.admin.id}" />
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名</label>
+            <div class="layui-input-inline">
+                <input class="layui-input" type="text" name="username" value="{$data.admin.username}" {$data.admin.id>0?'readonly':''} placeholder="请输入用户名" autocomplete="off" />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-inline">
+                <input class="layui-input" type="password" name="password" value="" placeholder="{$data.admin.id>0?'请输入新密码':'请输入密码'}" autocomplete="off" />
+            </div>
+            <div class="layui-form-mid layui-word-aux">{$data.admin.id>0?'可不输入':'长度6-16位'}</div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">真实姓名</label>
+            <div class="layui-input-inline">
+                <input class="layui-input" type="text" name="true_name" value="{$data.admin.true_name}" placeholder="请输入真实姓名" autocomplete="off" />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">角色</label>
+            <div class="layui-input-inline">
+                <select name="rid">
+                    <option value=0>请选择角色</option>
+                    {volist name="data.roles" id="role"}
+                    <option value={$role.rid} {$data.admin.adminRole.name==$role.name?'selected':''}>{$role.name}</option>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">状态</label>
+            <div class="layui-input-inline">
+                <input type="checkbox" name="status" lay-skin="switch" lay-text="ON|OFF" lay-filter="statusTips" value="1" {$data.admin.status=='正常'?'checked':''} />
+            </div>
+        </div>
+    </form>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="save();">保存</button>
+        </div>
+    </div>
+    <script>
+        layui.use(['form'],function () {
+            var form = layui.form;
+            $ = layui.jquery;
+            // 监听状态开关
+            form.on('switch(statusTips)',function (data) {
+                layer.tips(this.checked?'状态：正常':'状态：禁用',data.othis);
+            })
+        });
+
+        /**
+         * 保存管理员信息
+         */
+        function save() {
+            // 获取id,添加时id为空,parseInt强转后为NaN
+            var id = parseInt($('input[name="id"]').val());
+            // 表单数据校验
+            if ($.trim($('input[name="username"]').val()) == ''){
+                layer.alert('请输入用户名',{icon: 2});
+                return;
+            }
+            if (isNaN(id) && $.trim($('input[name="password"]').val()) == ''){
+                layer.alert('请输入密码',{icon: 2});
+                return;
+            }
+            if ($.trim($('input[name="true_name"]').val()) == ''){
+                layer.alert('请输入真实姓名',{icon: 2});
+                return;
+            }
+            if ($.trim($('select[name="rid"]').val()) == 0){
+                layer.alert('请选择角色',{icon: 2});
+                return;
+            }
+            $.post('/admin_save',$('#form-admin').serialize(),function (response) {
+                if (response['code'] == 2002 ){
+                    layer.msg(response.msg,{icon: 1});
+                    // 1s后重新加载当前列表页面
+                    setTimeout(function () {
+                        parent.location.reload();
+                    },1000);
+                } else {
+                    layer.msg(response.msg,{icon: 2});
+                }
+            },'json');
+        }
+    </script>
+</body>
+</html>

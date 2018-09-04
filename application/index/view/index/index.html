@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>木子博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="湖北大学2015级软件工程（产业计划）班学生李路，李路，木子博客，木子足各，木子，L博客，L，mz">
+    <meta name="description" content="木子博客-由湖北大学2015级软件工程（产业计划）班学生李路独立完成。基于ThinkPHP5.0.20框架开发。">
+    <meta name="baidu-site-verification" content="KGIRUei4ZL" />
+    <link rel="stylesheet" href="__PLUGINS__/layui/css/layui.css">
+    <link rel="stylesheet" href="__INDEXSTATIC__/css/global.css">
+    <!--引入font图标CDN-->
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body>
+{include file='/common/header' /}
+<div class="layui-container" style="margin-top: 25px;">
+    <blockquote class="layui-elem-quote" style="background-color: #eb7350"><marquee width="200px" scrolldelay="400" behavior="alternate">没有行动的梦想都是妄想！</marquee><span class="layui-hide-xs" style="float: right">当前日期：<span id="currentTime"></span></span></blockquote>
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md9">
+            <ul class="blogsbox" id="articles">
+            </ul>
+            <!--blogsbox end-->
+        </div>
+        {include file='/common/rightInfo' /}
+    </div>
+</div>
+{include file='/common/footer' /}
+<script src="__PLUGINS__/layui/layui.js"></script>
+<script>
+    layui.use(['util','element','flow'],function(){
+        var util = layui.util;
+        // 面板依赖组件
+        var element = layui.element;
+        var flow = layui.flow;
+        $ = layui.jquery;
+        //信息流
+        flow.load({
+            elem: '#articles',
+            isAuto: true,
+            done: function (page,next) {
+                var lis = [];
+                //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
+                $.get('/api/articles/'+page, function(res){
+                    //假设你的列表返回在data集合中
+                    layui.each(res.data, function(index, item){
+                        lis.push('<li class="blogs" data-scroll-reveal="enter bottom over 1s">' +
+                            '<h3 class="blogtitle"><a href="/article/'+ item.id +'" target="_blank">'+ item.title +'</a></h3>' +
+                            '<div class="pt"><span class="blogpic"><img src="/public/uploads/category_photo/'+ item.cover_photo +'" alt=""></span>' +
+                            '<p class="blogtext">'+ item.summary +'</p></div>' +
+                            '<div class="bloginfo"><ul>' +
+                            '<li class="author"><i class="fa fa-user fa-lg"></i><a href="/"> '+ item.admin_id +'</a></li>' +
+                            '<li class="lmname"><i class="fa fa-list"></i><a href="/"> '+ item.category_id +'</a></li>' +
+                            '<li class="timer"><i class="fa fa-clock-o"></i> '+ item.update_time +'</li>' +
+                            '<li class="view"><i class="fa fa-eye"></i> <span>'+ item.read_count +'</span></li>' +
+                            '<li class="like"><i class="fa fa-heart"></i> '+ item.love_count +'</li></ul><a class="layui-btn layui-btn-normal layui-btn-sm" style="float: right;" href="/article/'+ item.id +'">阅读全文</a></div>' +
+                            '</li>');
+                    });
+                    //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                    //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                    next(lis.join(''), page < res.pages);
+                },'json');
+            }
+        });
+        // 右下角返回顶部
+        util.fixbar({
+            bar1: false,
+            bgcolor: '#514D8D',
+            click: function(type){
+                if(type === 'bar1'){
+                    alert('点击了bar1');
+                }
+            }
+        });
+        // 每隔1s调用，实时获取时间
+        setInterval("getCurrentTime()",1000);
+    });
+
+    /**
+     * 获取当前时间
+     */
+    function getCurrentTime() {
+        var date = new Date();
+        var weekArray = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+        $('#currentTime').html(date.getFullYear() + '年' + (Array(2).join(0) + (date.getMonth() + 1)).slice(-2) + '月' + date.getDate() + '日&nbsp;' + weekArray[date.getDay()] + '&nbsp;' + date.getHours() + '时' + date.getMinutes() + '分' + date.getSeconds() + '秒');
+    }
+</script>
+{include file="/common/baidu_js_push" /}
+</body>
+</html>
